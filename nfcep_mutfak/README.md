@@ -1,3 +1,22 @@
+# NFCep Mutfak (Tablet)
+
+Mutfak çalışanları için tablet arayüzü. Giriş yap, gelen siparişleri görüntüle, sipariş durumunu güncelle. Sipariş tamamlandığında müsait garsona otomatik yemek alma çağrısı gider.
+
+## Çalıştırma
+
+- Backend'in `http://localhost:8080` üzerinde çalıştığından emin olun.
+- `npm run dev` — Vite dev server (varsayılan: http://localhost:5173).
+- Farklı API adresi için: `VITE_API_URL=http://... npm run dev` veya `.env` içinde `VITE_API_URL=...` tanımlayın.
+
+## Özellikler
+
+- **Giriş:** Mutfak hesabı ile `/api/auth/mutfak/login`.
+- **Sipariş listesi:** Aktif siparişler (Alındı / Hazırlanıyor), sayfalama, 15 sn otomatik yenileme.
+- **Durum güncelleme:** Alındı → Hazırlanıyor → Tamamlandı.
+- **Tamamlandı:** Sipariş tamamlanınca müsait garsona "Yemek hazır, lütfen masaya götürün" çağrısı gönderilir (`POST /api/mutfak/calls`).
+
+---
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

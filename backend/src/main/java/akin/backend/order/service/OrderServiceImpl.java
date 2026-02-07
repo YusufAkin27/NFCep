@@ -72,6 +72,28 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
+    public OrderResponse createOrderPublic(CreateOrderRequest request) {
+        Order order = new Order();
+        order.setTableNumber(request.getTableNumber());
+        order.setTableName(request.getTableName());
+        order.setStatus(OrderStatus.ALINDI);
+        order.setOrderItems(new ArrayList<>());
+        for (OrderItemRequest itemReq : request.getItems()) {
+            Product product = productRepository.findById(itemReq.getProductId())
+                    .orElseThrow(ProductNotFoundException::new);
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setProduct(product);
+            orderItem.setQuantity(itemReq.getQuantity());
+            order.getOrderItems().add(orderItem);
+        }
+        order = orderRepository.save(order);
+        log.info("Müşteri siparişi: masa {} id {}", order.getTableNumber(), order.getId());
+        return toResponse(order);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Page<OrderResponse> findActiveOrders(Pageable pageable) {
         return orderRepository.findAllByStatusIn(ACTIVE_STATUSES, pageable).map(this::toResponse);

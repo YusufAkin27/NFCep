@@ -10,6 +10,9 @@ public interface OrderService {
 
     OrderResponse createOrder(Long adminUserId, CreateOrderRequest request);
 
+    /** Müşteri siparişi (masa numarasına göre, auth gerekmez) */
+    OrderResponse createOrderPublic(CreateOrderRequest request);
+
     Page<OrderResponse> findActiveOrders(Pageable pageable);
 
     OrderResponse updateOrderStatus(Long orderId, OrderStatus status);
