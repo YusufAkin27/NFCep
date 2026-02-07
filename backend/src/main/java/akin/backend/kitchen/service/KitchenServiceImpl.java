@@ -23,7 +23,7 @@ public class KitchenServiceImpl implements KitchenService {
 
     private void ensureMutfak(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        if (!user.getRoles().contains(Role.MUTFAK)) {
+        if (user.getRole() != Role.MUTFAK) {
             throw new UserNotAdminException();
         }
     }

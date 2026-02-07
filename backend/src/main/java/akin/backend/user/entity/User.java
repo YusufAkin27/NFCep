@@ -8,15 +8,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails {
+public abstract class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -25,37 +27,35 @@ public class User implements UserDetails {
     private String username;
     private String password;
 
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id")
-    )
-    @Column(name = "role")
-    private Set<Role> roles;
-
     private boolean enabled = true;
 
     private String firstName;
     private String lastName;
 
-    /** Bugün çalışıyor mu (izin günü değil mi). Admin false yaparak "çalışmıyor" işaretleyebilir. */
-    private Boolean workingToday = true;
-
     private LocalDateTime createdAt;
+
+    public abstract Role getRole();
+
+    /** Default null; Garson and Mutfak override. */
+    public Boolean getWorkingToday() {
+        return null;
+    }
+
+    /** Default null; Garson overrides. */
+    public Boolean getAvailable() {
+        return null;
+    }
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
-                .toList();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + getRole().name()));
     }
 
     @Override
@@ -65,17 +65,16 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
-
 }

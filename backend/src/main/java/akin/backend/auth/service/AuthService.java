@@ -10,6 +10,8 @@ import akin.backend.user.entity.Role;
 import akin.backend.user.entity.User;
 import akin.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,7 +53,7 @@ public class AuthService {
             throw new InvalidCredentialsException();
         }
 
-        if (!user.getRoles().contains(requiredRole)) {
+        if (user.getRole() != requiredRole) {
             throw new InvalidCredentialsException();
         }
 
@@ -59,7 +61,7 @@ public class AuthService {
             throw new InvalidCredentialsException();
         }
 
-        String accessToken = jwtUtil.generateToken(user.getId(), user.getUsername(), user.getRoles());
+        String accessToken = jwtUtil.generateToken(user.getId(), user.getUsername(), Set.of(user.getRole()));
         log.info("Kullanıcı giriş yaptı: {} rol: {}", user.getUsername(), requiredRole);
 
         return new AuthResponse(accessToken);

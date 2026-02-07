@@ -1,5 +1,6 @@
 package akin.backend.user.controller;
 
+import akin.backend.admin.request.ChangePasswordRequest;
 import akin.backend.user.dto.request.UpdateProfileRequest;
 import akin.backend.user.dto.response.ProfileResponse;
 import akin.backend.user.dto.response.UserResponse;
@@ -33,6 +34,12 @@ public class UserController {
     }
 
 
+    @PatchMapping("/change-password")
+    public ResponseEntity<ProfileResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest,
+                                                          Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
+        return userService.changePassword(userId, changePasswordRequest);
+    }
 
     @PatchMapping("/account/deactivate")
     public ResponseEntity<Void> deactivateAccount(Authentication authentication) {

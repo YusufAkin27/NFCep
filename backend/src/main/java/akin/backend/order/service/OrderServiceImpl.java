@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
 
     private void ensureAdmin(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        if (!user.getRoles().contains(Role.ADMIN)) {
+        if (user.getRole() != Role.ADMIN) {
             throw new UserNotAdminException();
         }
     }

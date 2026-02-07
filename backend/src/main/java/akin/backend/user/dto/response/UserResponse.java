@@ -25,17 +25,19 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private Boolean workingToday;
+    private Boolean available;
     private LocalDateTime createdAt;
 
     public static UserResponse from(User user) {
         UserResponse userResponse = new UserResponse();
         userResponse.setId(user.getId());
         userResponse.setUsername(user.getUsername());
-        userResponse.setRoles(user.getRoles());
+        userResponse.setRoles(Set.of(user.getRole()));
         userResponse.setEnabled(user.isEnabled());
         userResponse.setFirstName(user.getFirstName());
         userResponse.setLastName(user.getLastName());
         userResponse.setWorkingToday(user.getWorkingToday());
+        userResponse.setAvailable(user.getAvailable());
         userResponse.setCreatedAt(user.getCreatedAt());
         return userResponse;
     }

@@ -4,6 +4,10 @@ import akin.backend.auth.exception.InvalidCredentialsException;
 import akin.backend.auth.exception.RateLimitExceededException;
 import akin.backend.order.exception.InvalidOrderStatusException;
 import akin.backend.order.exception.OrderNotFoundException;
+import akin.backend.call.exception.CallNotFoundException;
+import akin.backend.call.exception.InvalidCallStatusException;
+import akin.backend.table.exception.DuplicateTableNumberException;
+import akin.backend.table.exception.TableNotFoundException;
 import akin.backend.product.exception.CloudinaryUploadException;
 import akin.backend.product.exception.ProductNotFoundException;
 import akin.backend.user.exception.DuplicateUsernameException;
@@ -66,6 +70,26 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidOrderStatusException.class)
     public ResponseEntity<Map<String, String>> handleInvalidOrderStatus(InvalidOrderStatusException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(KEY_ERROR, ex.getMessage()));
+    }
+
+    @ExceptionHandler(TableNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleTableNotFound(TableNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(KEY_ERROR, ex.getMessage()));
+    }
+
+    @ExceptionHandler(DuplicateTableNumberException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateTableNumber(DuplicateTableNumberException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(KEY_ERROR, ex.getMessage()));
+    }
+
+    @ExceptionHandler(CallNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCallNotFound(CallNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(KEY_ERROR, ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidCallStatusException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidCallStatus(InvalidCallStatusException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(KEY_ERROR, ex.getMessage()));
     }
 

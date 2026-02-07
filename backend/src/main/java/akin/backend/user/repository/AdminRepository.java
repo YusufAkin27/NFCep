@@ -1,13 +1,13 @@
 package akin.backend.user.repository;
 
-import akin.backend.user.entity.User;
+import akin.backend.user.entity.Admin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface AdminRepository extends JpaRepository<Admin, Long> {
 
-    Optional<User> findByUsername(String username);
+    Optional<Admin> findByUsername(String username);
 }
