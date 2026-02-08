@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Table {
+public class Masa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

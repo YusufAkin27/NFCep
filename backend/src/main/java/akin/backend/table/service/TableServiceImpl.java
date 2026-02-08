@@ -3,7 +3,7 @@ package akin.backend.table.service;
 import akin.backend.table.dto.request.CreateTableRequest;
 import akin.backend.table.dto.request.UpdateTableRequest;
 import akin.backend.table.dto.response.TableResponse;
-import akin.backend.table.entity.Table;
+import akin.backend.table.entity.Masa;
 import akin.backend.table.exception.DuplicateTableNumberException;
 import akin.backend.table.exception.TableNotFoundException;
 import akin.backend.table.repository.TableRepository;
@@ -41,13 +41,13 @@ public class TableServiceImpl implements TableService {
         if (tableRepository.existsByTableNumber(request.getTableNumber())) {
             throw new DuplicateTableNumberException();
         }
-        Table table = Table.builder()
+        Masa masa = Masa.builder()
                 .tableNumber(request.getTableNumber())
                 .tableName(request.getTableName())
                 .build();
-        table = tableRepository.save(table);
-        log.info("Masa oluşturuldu: {}", table.getTableNumber());
-        return toResponse(table);
+        masa = tableRepository.save(masa);
+        log.info("Masa oluşturuldu: {}", masa.getTableNumber());
+        return toResponse(masa);
     }
 
     @Override
@@ -63,42 +63,42 @@ public class TableServiceImpl implements TableService {
     @Transactional
     public TableResponse update(Long adminUserId, Long id, UpdateTableRequest request) {
         ensureAdmin(adminUserId);
-        Table table = tableRepository.findById(id).orElseThrow(TableNotFoundException::new);
+        Masa masa = tableRepository.findById(id).orElseThrow(TableNotFoundException::new);
         if (request.getTableNumber() != null) {
-            if (!request.getTableNumber().equals(table.getTableNumber()) && tableRepository.existsByTableNumber(request.getTableNumber())) {
+            if (!request.getTableNumber().equals(masa.getTableNumber()) && tableRepository.existsByTableNumber(request.getTableNumber())) {
                 throw new DuplicateTableNumberException();
             }
-            table.setTableNumber(request.getTableNumber());
+            masa.setTableNumber(request.getTableNumber());
         }
         if (request.getTableName() != null) {
-            table.setTableName(request.getTableName());
+            masa.setTableName(request.getTableName());
         }
-        table = tableRepository.save(table);
-        log.info("Masa güncellendi: {}", table.getTableNumber());
-        return toResponse(table);
+        masa = tableRepository.save(masa);
+        log.info("Masa güncellendi: {}", masa.getTableNumber());
+        return toResponse(masa);
     }
 
     @Override
     @Transactional
     public void delete(Long adminUserId, Long id) {
         ensureAdmin(adminUserId);
-        Table table = tableRepository.findById(id).orElseThrow(TableNotFoundException::new);
-        tableRepository.delete(table);
-        log.info("Masa silindi: {}", table.getTableNumber());
+        Masa masa = tableRepository.findById(id).orElseThrow(TableNotFoundException::new);
+        tableRepository.delete(masa);
+        log.info("Masa silindi: {}", masa.getTableNumber());
     }
 
     @Override
     @Transactional(readOnly = true)
     public TableResponse getByTableNumber(String tableNumber) {
-        Table table = tableRepository.findByTableNumber(tableNumber).orElseThrow(TableNotFoundException::new);
-        return toResponse(table);
+        Masa masa = tableRepository.findByTableNumber(tableNumber).orElseThrow(TableNotFoundException::new);
+        return toResponse(masa);
     }
 
-    private TableResponse toResponse(Table table) {
+    private TableResponse toResponse(Masa masa) {
         return TableResponse.builder()
-                .id(table.getId())
-                .tableNumber(table.getTableNumber())
-                .tableName(table.getTableName())
+                .id(masa.getId())
+                .tableNumber(masa.getTableNumber())
+                .tableName(masa.getTableName())
                 .build();
     }
 }
